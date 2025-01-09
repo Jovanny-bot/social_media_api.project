@@ -2,11 +2,9 @@ from django.shortcuts import render
 from rest_framework import viewsets
 from .serializer import user_modelserializer, PostSerializer, FollowerSerializer
 from .models import user_model,Post,Follower
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated, AllowAny, CanFollowUser , CanEditProfile, CanDeletePost, CanLikePost, CanCommentOnPost
 from .permissions import IsOwnerOrReadOnly
 from rest_framework import generics
-
-
 
 
 class user_modelViewSet(viewsets.ModelViewSet):
@@ -17,7 +15,7 @@ class user_modelViewSet(viewsets.ModelViewSet):
 class PostViewSet(viewsets.ModelViewSet):
   serializer_class=PostSerializer
   queryset = Post.objects.all()
-  permission_classes = [IsOwnerOrReadOnly]
+  permission_classes = [IsOwnerOrReadOnly, IsAuthenticated]
 
   def perform_create(self, serializer):
     user = self.request.user
@@ -32,6 +30,7 @@ class PostListAPIView(generics.ListAPIView):
 class FollowerViewSet(viewsets.ModelViewSet):
   serializer_class = FollowerSerializer
   queryset = Follower.objects.filter()
+  permission_classes = [IsAuthenticated, CanFollowUser]
 
 
 
