@@ -7,7 +7,7 @@ router = DefaultRouter()
 
 router.register("users", user_modelViewSet)
 router.register("posts", PostViewSet)
-router.register("follower", FollowerViewSet)
+router.register(r'followers', FollowerViewSet, basename='follower')
 
 
 urlpatterns = [

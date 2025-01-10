@@ -4,7 +4,7 @@ from .models import user_model,Post,Follower
 class user_modelserializer(serializers.ModelSerializer):
   class Meta:
     model = user_model
-    fields = ("username", "email", "password", "profile", "bio")
+    fields = ("pk","username", "email", "password", "profile", "bio")
     extra_kwargs = {
       "password" : {"write_only" : True}
     }
@@ -23,12 +23,23 @@ class user_modelserializer(serializers.ModelSerializer):
 
 
 class PostSerializer(serializers.ModelSerializer):
+  author = serializers.CharField(source= "user.username")
   class Meta:
     model = Post
-    fields = ("user", "title", "content", "media")
+    fields = ("id","user", "author","title", "content", "media")
     read_only_fields = ["user"]
 
 class FollowerSerializer(serializers.ModelSerializer):
-  class Meta:
-    model = Follower
-    fields = ("user", "followers")
+    followers = serializers.PrimaryKeyRelatedField(
+        many=True, read_only = True
+    )  # Handles a list of follower IDs
+
+    class Meta:
+        model = Follower
+        fields = ["user", "followers"]
+        read_only_fields = ["user"]  # `user` is read-only to avoid modifying it directly
+
+    def update(self, instance, validated_data):
+        followers = validated_data.get("followers", [])
+        instance.followers.add(*followers)  # Add the new followers
+        return instance

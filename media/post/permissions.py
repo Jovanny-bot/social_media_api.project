@@ -19,7 +19,7 @@ class IsAuthenticatedUser (BasePermission):
     def has_permission(self, request, view):
         return request.user.is_authenticated
     
-class CanFollowUser (BasePermission):
+class canFollowUser (BasePermission):
     message = "You cannot follow yourself."
 
     def has_permission(self, request, view):

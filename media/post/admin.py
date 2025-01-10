@@ -13,6 +13,7 @@ class post_modelAdmin(admin.ModelAdmin):
 
 @admin.register(Follower)
 class follower_modelAdmin(admin.ModelAdmin):
+  list_display = ['user__username']
   search_fields = ("username","followers")
   search_display = ("user","followers")
   

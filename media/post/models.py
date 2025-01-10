@@ -24,12 +24,12 @@ class Post(models.Model):
     return f"{self.user.username} - {self.title}"
 
 class Follower(models.Model):
-  user = models.OneToOneField(User, on_delete=models.CASCADE)
-  followers = models.ManyToManyField(
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='follower_profile')  # One-to-one relationship with User
+    followers = models.ManyToManyField(
         "self", 
-        symmetrical=False, 
-        related_name="following"
+        symmetrical=False,  # Non-symmetrical relationship (A follows B doesn't imply B follows A)
+        related_name="following",  # Users that this user is following
     )
 
-  def __str__(self):
-        return f"{self.user.username}'s followers"
+    def __str__(self):
+        return f"{self.user.username}"
